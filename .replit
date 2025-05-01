@@ -6,3 +6,19 @@ channel = "stable-24_05"
 
 [deployment]
 run = ["sh", "-c", "node tms-backend/app.js"]
+
+[workflows]
+runButton = "Full Stack Dev"
+
+[[workflows.workflow]]
+name = "Full Stack Dev"
+author = 42164233
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd tms-backend && npm install && node app.js"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd tms-frontend && npm install && npm start"
