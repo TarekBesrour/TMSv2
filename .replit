@@ -22,3 +22,11 @@ args = "cd tms-backend && npm install && node app.js"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd tms-frontend && npm install && npm start"
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
