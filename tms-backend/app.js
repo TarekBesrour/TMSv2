@@ -1,20 +1,29 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const { Pool } = require("pg");
+
 const app = express();
-const { Pool } = require('pg');
+const port = process.env.PORT || 3000;
+
+// Configuration de la connexion PostgreSQL Neon
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false }, // requis pour Neon
 });
 
-app.use(cors());
+app.get("/", (req, res) => {
+  res.send("🌱 Serveur backend connecté à PostgreSQL Neon");
+});
 
-app.get('/', (req, res) => res.send('Hello from backend!'));
+app.get("/now", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur PostgreSQL");
+  }
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-app.get('/test-db', async (req, res) => {
-    const result = await pool.query('SELECT NOW()');
-    res.json(result.rows);
-  });
+app.listen(port, () => {
+  console.log(`✅ Serveur Node.js démarré sur port ${port}`);
+});
