@@ -2,7 +2,7 @@ const express = require("express");
 const { Pool } = require("pg");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // Configuration de la connexion PostgreSQL Neon
 const pool = new Pool({
