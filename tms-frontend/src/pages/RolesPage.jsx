@@ -7,7 +7,7 @@ const RolesPage = () => {
   const [editingId, setEditingId] = useState(null);
 
   const fetchRoles = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/roles`);
+    const res = await axios.get(`/api/roles`);
     setRoles(res.data);
   };
 
@@ -60,7 +60,7 @@ const RolesPage = () => {
           type="text"
           name="libelle"
           placeholder="Libellé"
-          value={form.libelle}
+          value={form.rolnom}
           onChange={handleChange}
           className="border p-2 w-full"
         />
