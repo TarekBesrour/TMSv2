@@ -1,44 +1,50 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { Truck, Shield, Lock, Mail } from 'lucide-react';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
-  const [password, setMotDePasse] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      await axios.post('/api/auth/login', { email, password });
-      onLogin();
-      navigate('/AppLayout');
-    } catch (err) {
-      setError(err.response?.data?.message || err.message ||'Identifiants incorrects. Veuillez réessayer.');
-    } finally {
+    
+    // Simulation de connexion
+    setTimeout(() => {
+      if (email === 'demo@transport.com' && password === 'password') {
+        // Succès simulé
+        console.log('Connexion réussie');
+      } else {
+        // Erreur simulée
+        setError('Identifiants incorrects. Veuillez réessayer.');
+      }
       setLoading(false);
-    }
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
+    <div 
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')`,
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <div className="w-full max-w-md px-6">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white bg-opacity-95 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden border border-gray-200">
           {/* Logo/Header Section */}
           <div className="bg-blue-600 py-6 px-8 flex items-center justify-center flex-col">
             <div className="rounded-full bg-white p-3 mb-3">
               <Truck size={32} className="text-blue-600" />
             </div>
-            <h1 className="text-white text-2xl font-bold">Salma TMS</h1>
+            <h1 className="text-white text-2xl font-bold">TransPort TMS</h1>
             <p className="text-blue-100 text-sm mt-1">Gestion de Transport Simplifiée</p>
           </div>
           
           {/* Form Section */}
-          <form onSubmit={handleSubmit} className="p-8">
+          <div className="p-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Connexion à votre compte</h2>
             
             {error && (
@@ -60,7 +66,6 @@ const LoginPage = ({ onLogin }) => {
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="votre@email.com"
                     onChange={e => setEmail(e.target.value)}
-                    required
                   />
                 </div>
               </div>
@@ -68,7 +73,7 @@ const LoginPage = ({ onLogin }) => {
               <div>
                 <div className="flex justify-between mb-2">
                   <label className="block text-gray-700 text-sm font-medium">Mot de passe</label>
-                  <a href="#" className="text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                  <a className="text-sm text-blue-600 hover:text-blue-800 transition-colors cursor-pointer">
                     Mot de passe oublié?
                   </a>
                 </div>
@@ -80,8 +85,7 @@ const LoginPage = ({ onLogin }) => {
                     type="password"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="••••••••"
-                    onChange={e => setMotDePasse(e.target.value)}
-                    required
+                    onChange={e => setPassword(e.target.value)}
                   />
                 </div>
               </div>
@@ -100,7 +104,7 @@ const LoginPage = ({ onLogin }) => {
             </div>
             
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={loading}
               className={`w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-medium transition-all duration-200 ${
                 loading ? 'bg-blue-400 cursor-not-allowed' : 'hover:bg-blue-700 active:bg-blue-800'
@@ -108,12 +112,12 @@ const LoginPage = ({ onLogin }) => {
             >
               {loading ? 'Connexion en cours...' : 'Se connecter'}
             </button>
-          </form>
+          </div>
           
           {/* Footer */}
           <div className="py-4 text-center border-t border-gray-100">
             <p className="text-sm text-gray-600">
-              Vous n'avez pas de compte? <a href="#" className="text-blue-600 font-medium hover:text-blue-800">Contactez l'administrateur</a>
+              Vous n'avez pas de compte? <a className="text-blue-600 font-medium hover:text-blue-800 cursor-pointer">Contactez l'administrateur</a>
             </p>
           </div>
         </div>
