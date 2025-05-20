@@ -8,6 +8,7 @@ export const getRoles = async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM role');
     res.json(result.rows);
+    //console.log('getRoles', req.body);
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
@@ -24,14 +25,14 @@ export const getRoleById = async (req, res) => {
   }
 };
 export const createRole = async (req, res) => {
-  const { rolcode, rolnom,rolactif } = req.body;
-
+  const { rolcode, rolnom /*,rolactif*/ } = req.body;
+ console.log('POST /api/roles', req.body);
   try {
     const result = await pool.query(
-      'INSERT INTO role (rolcode, rolnom,rolactif) VALUES ($1, $2, $3) RETURNING *',
-      [rolcode, rolnom,rolactif]
+      'INSERT INTO role (rolcode, rolnom) VALUES ($1, $2) RETURNING * ',
+      [rolcode, rolnom]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ message: 'Role créé', role: { rolcode, rolnom } });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la création', error: err.message });
   }
@@ -59,11 +60,11 @@ export const deleteRole = async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM role WHERE rolid=$1 RETURNING rolid', [rolid]);
     if (result.rows.length === 0) return res.status(404).json({ message: 'Rôle non trouvé' });
-    res.json({ message: 'Rôle supprimé', id });
+    res.json({ message: 'Rôle supprimé', rolid });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la suppression', error: err.message });
   }
 };
 
 
-module.exports = { createRole, getAllRoles, getRoleById, updateRole, deleteRole };
+//module.exports = { createRole, getAllRoles, getRoleById, updateRole, deleteRole };
