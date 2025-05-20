@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const RolesPage = () => {
   const [roles, setRoles] = useState([]);
-  const [form, setForm] = useState({ rolcode: '', rolnom: '' });
+  const [form, setForm] = useState({ rolid: '',rolcode: '', rolnom: '' });
   const [editingId, setEditingId] = useState(null);
 
   const fetchRoles = async () => {
@@ -22,13 +22,34 @@ const RolesPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingId) {
+      try{
       await axios.put(`/api/roles/${editingId}`, form);
+            //axios.pot(`/api/roles`, form);
+    } catch(error) {
+    alert(error.response?.data?.message || error.message);
+    console.error(error+'put');
+      }
     } else {
-      await axios.post('/api/roles', form);
+      try{
+    const res = await axios.post(`/api/roles`, form);
+      console.log('Réponse création:', res.data);
+      setForm({ rolcode: '', rolnom: '' });
+      setEditingId(null);
+      fetchRoles();
+    }catch(error) {
+    alert(error.response?.data?.message || error.message);
+    console.error('setform '+error);
+      }
     }
+    
+    try {
     setForm({ rolcode: '', rolnom: '' });
     setEditingId(null);
     fetchRoles();
+  } catch(error) {
+    alert(error.response?.data?.message || error.message);
+    console.error('setform '+error);
+      }
   };
 
   const handleEdit = (role) => {
@@ -58,7 +79,7 @@ const RolesPage = () => {
         />
         <input
           type="text"
-          name="libelle"
+          name="rolnom"
           placeholder="Libellé"
           value={form.rolnom}
           onChange={handleChange}
@@ -68,7 +89,7 @@ const RolesPage = () => {
           {editingId ? 'Modifier' : 'Ajouter'}
         </button>
       </form>
-
+//Liste des rôles
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-100">
@@ -81,12 +102,12 @@ const RolesPage = () => {
         <tbody>
           {roles.map((role) => (
             <tr key={role.id}>
-              <td className="border p-2">{role.id}</td>
+              <td className="border p-2">{role.rolid}</td>
               <td className="border p-2">{role.rolcode}</td>
               <td className="border p-2">{role.rolnom}</td>
               <td className="border p-2 space-x-2">
                 <button onClick={() => handleEdit(role)} className="text-blue-500">Éditer</button>
-                <button onClick={() => handleDelete(role.id)} className="text-red-500">Supprimer</button>
+                <button onClick={() => handleDelete(role.rolid)} className="text-red-500">Supprimer</button>
               </td>
             </tr>
           ))}

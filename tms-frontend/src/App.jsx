@@ -32,6 +32,16 @@ function App() {
           path="/roles"
           element={isAuthenticated ? <RolesPage /> : <Navigate to="/" />}
         />
+ {/* Exemple avec MenuLayout comme layout parent */}
+        <Route
+          path="/app"
+          element={isAuthenticated ? <AppLayout /> : <Navigate to="/" />}
+        >
+          <Route index element={<UsersPage />} />
+          <Route path="utilisateurs" element={<UsersPage />} />
+          <Route path="roles" element={<RolesPage />} />
+        </Route>
+
       </Routes>
     </Router>
   );

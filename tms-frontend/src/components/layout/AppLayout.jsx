@@ -1,4 +1,5 @@
-
+import { Outlet,useNavigate,useLocation } from 'react-router-dom';
+//import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { 
   Truck, 
@@ -18,12 +19,15 @@ import {
 } from 'lucide-react';
 
 // Composant principal de layout
+
 const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [activePage, setActivePage] = useState('dashboard');
+  //const [activePage, setActivePage] = useState('dashboard');
   const [notifications, setNotifications] = useState(3);
   const [darkMode, setDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Appliquer le thème au chargement et quand il change
   useEffect(() => {
@@ -42,24 +46,27 @@ const AppLayout = () => {
     { id: 'routes', icon: <Map size={20} />, label: 'Itinéraires' },
     { id: 'fleet', icon: <Truck size={20} />, label: 'Flotte' },
     { id: 'drivers', icon: <Users size={20} />, label: 'Chauffeurs' },
-    { id: 'documents', icon: <FileText size={20} />, label: 'Documents' },
+    { id: '/app/utilisateurs', icon: <Users size={20} />, label: 'Utilisateurs' },
+    { id: '/app/roles', icon: <Users size={20} />, label: 'Rôles' },
     { id: 'settings', icon: <Settings size={20} />, label: 'Paramètres' },
   ];
 
   // Demo content
-  const getPageContent = () => {
-    switch(activePage) {
-      case 'dashboard':
-        return <DashboardContent darkMode={darkMode} />;
-      default:
-        return (
-          <div className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4 dark:text-white">Page {activePage}</h2>
-            <p className="text-gray-600 dark:text-gray-300">Contenu de la page {activePage} à venir</p>
-          </div>
-        );
-    }
-  };
+  // const getPageContent = () => {
+  //   switch(activePage) {
+  //     case 'dashboard':
+  //       return <DashboardContent darkMode={darkMode} />;
+  //       //navigate('/utilisateurs');
+  //     default:
+  //       return (
+  //         <div className="p-8 text-center">
+  //           <h2 className="text-2xl font-bold mb-4 dark:text-white">Page {activePage}</h2>
+  //           <p className="text-gray-600 dark:text-gray-300">Contenu de la page {activePage} à venir</p>
+  //         </div>
+          
+  //       );
+  //   }
+  // };
 
   return (
     <div className={`flex h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
@@ -96,10 +103,17 @@ const AppLayout = () => {
             {menuItems.map((item) => (
               <div 
                 key={item.id}
-                onClick={() => setActivePage(item.id)}
+                onClick={() => {
+                  //setActivePage(item.id);
+                  navigate(item.id);
+                }}
+          //       className={`
+          //       flex items-center ...
+          //       ${location.pathname === item.id ? 'bg-blue-600 text-white shadow-md' : '...'}
+          // `}
                 className={`
                   flex items-center ${sidebarOpen ? 'px-4' : 'justify-center px-2'} py-3 mb-2.5 rounded-lg cursor-pointer transition-all
-                  ${activePage === item.id ? 
+                  ${location.pathname === item.id ? 
                     (darkMode ? 'bg-blue-600 text-white shadow-md' : 'bg-white bg-opacity-15 text-white shadow-md') : 
                     (darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-blue-100 hover:bg-white hover:bg-opacity-10')}
                   transform hover:translate-x-1
@@ -223,7 +237,8 @@ const AppLayout = () => {
 
         {/* Page content */}
         <main className={`flex-1 overflow-auto ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
-          {getPageContent()}
+          {/* {getPageContent()} */}
+           <Outlet />
         </main>
       </div>
     </div>
